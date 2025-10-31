@@ -3,7 +3,7 @@ const colors = {
   accent: '#00C9A7',
   secondary: '#C67D6F',
 
-  background: '#F9F9F9',
+  background: '#E7E7E7',
   surface: '#FFFFFF',
 
   text: '#153A5A',

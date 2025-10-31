@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const axiosClient = axios.create({
   baseURL: 'https://api.escuelajs.co/api/v1/',
-  timeout: 8000,
+  timeout: 4000,
 });
 
 // request interceptor
