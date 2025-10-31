@@ -7,11 +7,14 @@ import { CartProvider } from './src/context/CartContext';
 import AppNavigation from './src/navigations/AppNavigations';
 import color from './src/theme/colors';
 
+import TopBar from './src/components/TopBar';
+
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <SafeAreaProvider style={styles.container}>
+      <TopBar />
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={color.primary}

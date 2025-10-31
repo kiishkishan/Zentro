@@ -1,45 +1,20 @@
-import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, Easing } from 'react-native';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 
 const SkeletonCard = () => {
-  const shimmer = useRef(new Animated.Value(-1)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.timing(shimmer, {
-        toValue: 1,
-        duration: 1000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    ).start();
-  }, [shimmer]);
-
-  const translateX = shimmer.interpolate({
-    inputRange: [-1, 1],
-    outputRange: [-200, 200],
-  });
-
   return (
     <View style={styles.skeletonCard}>
       {/* Image Placeholder */}
-      <View style={styles.imagePlaceholder}>
-        <Animated.View
-          style={[styles.shimmer, { transform: [{ translateX }] }]}
-        />
-      </View>
+      <View style={styles.imagePlaceholder} />
+
       {/* Title Placeholder */}
-      <View style={styles.titlePlaceholder}>
-        <Animated.View
-          style={[styles.shimmer, { transform: [{ translateX }] }]}
-        />
-      </View>
+      <View style={styles.titlePlaceholder} />
+
+      {/* Description Placeholder */}
+      <View style={styles.descriptionPlaceholder} />
+
       {/* Price Placeholder */}
-      <View style={styles.pricePlaceholder}>
-        <Animated.View
-          style={[styles.shimmer, { transform: [{ translateX }] }]}
-        />
-      </View>
+      <View style={styles.pricePlaceholder} />
     </View>
   );
 };
@@ -65,43 +40,44 @@ const styles = StyleSheet.create({
   },
   skeletonCard: {
     width: '48%',
-    backgroundColor: '#E1E9EE',
-    borderRadius: 12,
+    backgroundColor: '#fff',
+    borderRadius: 16,
     padding: 10,
-    marginBottom: 12,
-    overflow: 'hidden',
-  },
-  shimmer: {
-    flex: 1,
-    backgroundColor: '#F2F8FC',
-    opacity: 0.5,
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    marginBottom: 16,
+    borderWidth: 0.5,
+    borderColor: '#e9e9e9',
+
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 8,
+    elevation: 3,
   },
   imagePlaceholder: {
     width: '100%',
-    height: 120,
-    borderRadius: 8,
-    marginBottom: 6,
-    backgroundColor: '#E1E9EE',
-    overflow: 'hidden',
+    height: 130,
+    borderRadius: 16,
+    backgroundColor: '#f7f7f9',
+    marginBottom: 10,
   },
   titlePlaceholder: {
-    width: '100%',
-    height: 14,
+    width: '80%',
+    height: 16,
     borderRadius: 4,
-    marginBottom: 4,
-    backgroundColor: '#E1E9EE',
-    overflow: 'hidden',
+    backgroundColor: '#e1e1e1',
+    marginBottom: 6,
+  },
+  descriptionPlaceholder: {
+    width: '90%',
+    height: 12,
+    borderRadius: 4,
+    backgroundColor: '#e1e1e1',
+    marginBottom: 8,
   },
   pricePlaceholder: {
     width: '40%',
-    height: 14,
+    height: 16,
     borderRadius: 4,
-    backgroundColor: '#E1E9EE',
-    overflow: 'hidden',
+    backgroundColor: '#e1e1e1',
   },
 });
