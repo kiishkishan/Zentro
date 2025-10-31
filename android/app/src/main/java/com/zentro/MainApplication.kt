@@ -1,4 +1,4 @@
-package com.simpleecommerce
+package com.zentro
 
 import android.app.Application
 import com.facebook.react.PackageList
