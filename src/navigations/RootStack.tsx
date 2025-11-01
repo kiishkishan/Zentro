@@ -12,9 +12,21 @@ const DetailsScreen = (props: any) => <ProductDetails {...props} />;
 const RootStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Tabs" component={Tabs} />
-    <Stack.Screen name="Details" component={DetailsScreen} />
-    <Stack.Screen name="Checkout" component={Checkout} />
-    <Stack.Screen name="Success" component={Success} />
+    <Stack.Screen
+      name="Details"
+      component={DetailsScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="Checkout"
+      component={Checkout}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="Success"
+      component={Success}
+      options={{ headerShown: false }}
+    />
   </Stack.Navigator>
 );
 
