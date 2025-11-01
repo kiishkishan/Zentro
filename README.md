@@ -58,7 +58,7 @@ src
  ├── store         # Redux Toolkit slices + thunks
  ├── theme         # typography, colors
  ├── types         # app‑wide TS types
- └── utils         # helper functions (ex: filter products)
+ └── utils         # helper functions (ex: filterProducts)
 ```
 
 ---
