@@ -1,21 +1,21 @@
 # Zentro App Documentation
 
-## 🛠️ Project Setup Guide
+ 🛠️ Project Setup Guide
 
-### Clone the Repository
+## Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd zentro
 ```
 
-### Switch to Main Branch
+## Switch to Main Branch
 
 ```bash
 git checkout main
 ```
 
-### Install Dependencies
+## Install Dependencies
 
 ```bash
 npm install
@@ -27,7 +27,7 @@ For iOS:
 cd ios && pod install && cd ..
 ```
 
-### Run the App
+## Run the App
 
 Android:
 
@@ -97,7 +97,7 @@ export const fetchProductsApi = (offset, limit) =>
 
 ---
 
-## 🧽 Why Filter Product Data?
+### 🧽 Why Filter Product Data?
 
 To avoid rendering broken products from Platzi fakeapi store
 
@@ -109,7 +109,7 @@ Ensures clean UI & avoids crashes.
 
 ---
 
-## 🧭 Type‑Safe Navigation
+### 🧭 Type‑Safe Navigation
 
 Implemented `@react-navigation` with TypeScript route types:
 
@@ -128,7 +128,7 @@ export type RootStackParamList = {
 
 ---
 
-## ♾️ Infinite Scroll Implementation
+### ♾️ Infinite Scroll Implementation
 
 * Used `FlatList`
 * `onEndReached` triggers new fetch
@@ -151,11 +151,11 @@ Frontend Framework
 
 React Native — cross‑platform mobile development
 
-# Language
+### Language
 
 TypeScript — end‑to‑end type‑safety for maintainability and robust code
 
-# State Management
+### State Management
 
 Redux Toolkit — optimized global state management
 
@@ -163,11 +163,11 @@ RTK Thunk — handles async API calls
 
 Redux Persist — persists store data across sessions
 
-# Networking
+### Networking
 
 Axios — HTTP client with centralized instance (axiosClient.ts)
 
-# Navigation
+### Navigation
 
 React Navigation — full navigation system (stack + tabs)
 
