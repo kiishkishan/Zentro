@@ -1,6 +1,6 @@
 # Zentro App Documentation
 
-## 🛠️ Project Setup Guide
+ 🛠️ Project Setup Guide
 
 ## Clone the Repository
 
@@ -43,7 +43,7 @@ npm run ios
 
 ---
 
-### 🧠 Architecture Overview
+# 🧠 Architecture Overview
 
 This project follows a clean, scalable React Native architecture with a strong separation of concerns and type‑safety.
 
@@ -63,7 +63,7 @@ src
 
 ---
 
-### 🔗 Data Flow (API → Store → UI)
+# 🔗 Data Flow (API → Store → UI)
 
 ```
 axiosClient.ts → products.ts (API functions) → thunk → slice → UI
@@ -143,7 +143,7 @@ onEndReached -> dispatch thunk -> fetch next set -> append to state
 
 Ensures seamless scrolling without duplicate loads.
 
-### 🧰 Tech Stack
+## 🧰 Tech Stack
 
  This project uses a modern, scalable, and performant tech stack:
 
