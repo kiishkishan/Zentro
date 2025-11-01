@@ -161,11 +161,9 @@ Redux Toolkit — optimized global state management
 
 RTK Thunk — handles async API calls
 
-Redux Persist — persists store data across sessions
-
 ### Networking
 
-Axios — HTTP client with centralized instance (axiosClient.ts)
+Axios — HTTP client with centralized instance (axiosClient.ts) which are interceptors for better success and error handling
 
 ### Navigation
 
