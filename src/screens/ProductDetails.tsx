@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -37,13 +37,23 @@ const ProductDetail = ({ route }: Props) => {
   const navigation = useNavigation();
   const { addToCart } = useContext(CartContext);
 
+  useEffect(() => {
+    if (!product?.images || !Array.isArray(product.images)) return;
+
+    const validImages = product.images.filter(Boolean);
+
+    Promise.all(
+      validImages.map(uri => Image.prefetch(uri).catch(() => null)),
+    ).catch(() => {});
+  }, [product?.images]);
+
   const addToCartHandler = () => {
     addToCart({
-      id: product.id,
-      title: product.title,
-      price: product.price,
+      id: product?.id,
+      title: product?.title,
+      price: product?.price,
       quantity: quantity,
-      image: product.images?.[0] || '',
+      image: product?.images?.[0] || '',
     });
 
     console.log('Added to cart:', product.title);
@@ -60,42 +70,48 @@ const ProductDetail = ({ route }: Props) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.backText}>← Back</Text>
-      </TouchableOpacity>
+      <View style={styles.headerArea}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.backArrow}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.heading}>Product Details</Text>
+      </View>
 
       <View style={styles.card}>
         {/* Image Carousel */}
-        <FlatList
-          data={product.images}
-          keyExtractor={(_, index) => index.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          renderItem={renderImage}
-          onScroll={onScroll}
-        />
+        <View style={styles.carouselContainer}>
+          <FlatList
+            data={product?.images}
+            keyExtractor={(_, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            renderItem={renderImage}
+            onScroll={onScroll}
+            initialNumToRender={3}
+            maxToRenderPerBatch={1}
+            windowSize={3}
+            removeClippedSubviews
+          />
 
-        {/* Carousel indicators */}
-        <View style={styles.indicatorWrapper}>
-          {product.images.map((_: any, i: number) => (
-            <View
-              key={i}
-              style={[
-                styles.indicator,
-                { opacity: Number(i === activeIndex ? 1.0 : 0.3) },
-              ]}
-            />
-          ))}
+          {/* Carousel Indicators */}
+          <View style={styles.indicatorWrapper}>
+            {product.images.map((_: any, i: number) => (
+              <View
+                key={i}
+                style={[
+                  styles.indicator,
+                  { opacity: Number(i === activeIndex ? 1.0 : 0.3) },
+                ]}
+              />
+            ))}
+          </View>
         </View>
 
         {/* Product Info */}
         <View style={styles.info}>
           <Text style={styles.title}>{product.title}</Text>
-          <Text style={styles.description} numberOfLines={9}>
+          <Text style={styles.description} numberOfLines={15}>
             {product.description.trim()}
           </Text>
           <Text style={styles.price}>${product.price}</Text>
@@ -137,27 +153,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
-  backButton: {
-    position: 'absolute',
-    top: 16,
-    left: 16,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    elevation: 5,
-    shadowColor: colors.white,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    zIndex: 5,
+  headerArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginBottom: 24,
+    marginTop: 16,
   },
-  backText: {
-    fontSize: 16,
-    fontWeight: typography.semiBold,
-    color: colors.textTitle,
-    backgroundColor: colors.surface,
+
+  heading: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.primary,
+    marginHorizontal: 60,
   },
+  backArrow: { fontSize: 22, fontWeight: '700', color: colors.primary },
+
   card: {
     width: width - 30,
     height: '95%',
@@ -175,6 +186,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 8,
     marginBottom: 16,
+  },
+  carouselContainer: {
+    width: width - 30,
+    height: 265,
+    position: 'relative',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    overflow: 'hidden',
   },
   indicator: {
     width: 8,

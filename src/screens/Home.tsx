@@ -37,7 +37,7 @@ const Home = ({ navigation }: any) => {
         <ProductsSkeleton />
       ) : (
         <FlatList
-          data={items.slice(0, 16)}
+          data={items}
           numColumns={2}
           renderItem={({ item }) => (
             <ProductCard
