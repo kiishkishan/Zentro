@@ -37,7 +37,7 @@ const TabIcon = React.memo(({ focused, source, label }: any) => {
           styles.text,
           {
             color: focused ? '#fff' : '#d4d4d4',
-            fontWeight: focused ? typography.extraBold : typography.medium,
+            fontWeight: focused ? typography.bold : typography.medium,
           },
         ]}
       >
