@@ -1,21 +1,21 @@
 # Zentro App Documentation
 
-## 🛠️ Project Setup Guide
+### 🛠️ Project Setup Guide
 
-### Clone the Repository
+## Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd zentro
 ```
 
-### Switch to Main Branch
+## Switch to Main Branch
 
 ```bash
 git checkout main
 ```
 
-### Install Dependencies
+## Install Dependencies
 
 ```bash
 npm install
@@ -27,7 +27,7 @@ For iOS:
 cd ios && pod install && cd ..
 ```
 
-### Run the App
+## Run the App
 
 Android:
 
@@ -43,7 +43,7 @@ npm run ios
 
 ---
 
-## 🧠 Architecture Overview
+### 🧠 Architecture Overview
 
 This project follows a clean, scalable React Native architecture with a strong separation of concerns and type‑safety.
 
@@ -63,19 +63,19 @@ src
 
 ---
 
-## 🔗 Data Flow (API → Store → UI)
+### 🔗 Data Flow (API → Store → UI)
 
 ```
 axiosClient.ts → products.ts (API functions) → thunk → slice → UI
 ```
 
-### axiosClient.ts
+## axiosClient.ts
 
 * Base axios instance (interceptors)
 * Handles headers & future auth tokens
 * Centralized config
 
-### products.ts (API Layer)
+## products.ts (API Layer)
 
 Defines reusable API functions:
 
@@ -84,13 +84,13 @@ export const fetchProductsApi = (offset, limit) =>
   axiosClient.get(`/products?offset=${offset}&limit=${limit}`);
 ```
 
-### Thunk
+## Thunk
 
 * Calls API
 * Handles async success/error
 * Stores data in Redux
 
-### UI
+## UI
 
 * Selects data from Redux
 * Displays products
@@ -143,7 +143,7 @@ onEndReached -> dispatch thunk -> fetch next set -> append to state
 
 Ensures seamless scrolling without duplicate loads.
 
-## 🧰 Tech Stack
+### 🧰 Tech Stack
 
  This project uses a modern, scalable, and performant tech stack:
 
@@ -151,11 +151,11 @@ Frontend Framework
 
 React Native — cross‑platform mobile development
 
-# Language
+### Language
 
 TypeScript — end‑to‑end type‑safety for maintainability and robust code
 
-# State Management
+### State Management
 
 Redux Toolkit — optimized global state management
 
@@ -163,11 +163,11 @@ RTK Thunk — handles async API calls
 
 Redux Persist — persists store data across sessions
 
-# Networking
+### Networking
 
 Axios — HTTP client with centralized instance (axiosClient.ts)
 
-# Navigation
+### Navigation
 
 React Navigation — full navigation system (stack + tabs)
 
