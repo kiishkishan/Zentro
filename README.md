@@ -1,97 +1,174 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Zentro App Documentation
 
-# Getting Started
+## 🛠️ Project Setup Guide
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+### Clone the Repository
 
-## Step 1: Start Metro
-
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
+```bash
+git clone <repository-url>
+cd zentro
 ```
 
-## Step 2: Build and run your app
+### Switch to Main Branch
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+```bash
+git checkout main
+```
 
-### Android
+### Install Dependencies
 
-```sh
-# Using npm
+```bash
+npm install
+```
+
+For iOS:
+
+```bash
+cd ios && pod install && cd ..
+```
+
+### Run the App
+
+Android:
+
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+iOS:
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+```bash
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🧠 Architecture Overview
 
-## Step 3: Modify your app
+This project follows a clean, scalable React Native architecture with a strong separation of concerns and type‑safety.
 
-Now that you have successfully run the app, let's make changes!
+```
+src
+ ├── api           # axios client & API handlers
+ ├── assets        # images/fonts
+ ├── components    # reusable UI components
+ ├── context       # context / providers for Cart
+ ├── navigations   # navigation + type‑safe routes
+ ├── screens       # screen UI
+ ├── store         # Redux Toolkit slices + thunks
+ ├── theme         # typography, colors
+ ├── types         # app‑wide TS types
+ └── utils         # helper functions (ex: filter products)
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+---
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 🔗 Data Flow (API → Store → UI)
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+```
+axiosClient.ts → products.ts (API functions) → thunk → slice → UI
+```
 
-## Congratulations! :tada:
+### axiosClient.ts
 
-You've successfully run and modified your React Native App. :partying_face:
+* Base axios instance (interceptors)
+* Handles headers & future auth tokens
+* Centralized config
 
-### Now what?
+### products.ts (API Layer)
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+Defines reusable API functions:
 
-# Troubleshooting
+```ts
+export const fetchProductsApi = (offset, limit) =>
+  axiosClient.get(`/products?offset=${offset}&limit=${limit}`);
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+### Thunk
 
-# Learn More
+* Calls API
+* Handles async success/error
+* Stores data in Redux
 
-To learn more about React Native, take a look at the following resources:
+### UI
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+* Selects data from Redux
+* Displays products
+
+---
+
+## 🧽 Why Filter Product Data?
+
+To avoid rendering broken products from Platzi fakeapi store
+
+* Missing `image`
+* Empty name
+* Invalid pricing fields
+
+Ensures clean UI & avoids crashes.
+
+---
+
+## 🧭 Type‑Safe Navigation
+
+Implemented `@react-navigation` with TypeScript route types:
+
+* Each stack has defined route params
+* Navigations always receive typed arguments
+* Prevents wrong screen param usage
+
+Example:
+
+```ts
+export type RootStackParamList = {
+  Home: undefined;
+  ProductDetail: { id: number };
+};
+```
+
+---
+
+## ♾️ Infinite Scroll Implementation
+
+* Used `FlatList`
+* `onEndReached` triggers new fetch
+* Offset + limit used for pagination
+* Store appends results instead of replacing
+
+Pseudo flow:
+
+```
+onEndReached -> dispatch thunk -> fetch next set -> append to state
+```
+
+Ensures seamless scrolling without duplicate loads.
+
+## 🧰 Tech Stack
+
+ This project uses a modern, scalable, and performant tech stack:
+
+Frontend Framework
+
+React Native — cross‑platform mobile development
+
+# Language
+
+TypeScript — end‑to‑end type‑safety for maintainability and robust code
+
+# State Management
+
+Redux Toolkit — optimized global state management
+
+RTK Thunk — handles async API calls
+
+Redux Persist — persists store data across sessions
+
+# Networking
+
+Axios — HTTP client with centralized instance (axiosClient.ts)
+
+# Navigation
+
+React Navigation — full navigation system (stack + tabs)
+
+Strong TypeScript route definitions
