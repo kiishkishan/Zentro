@@ -13,6 +13,8 @@ import { CartContext } from '../context/CartContext';
 import colors from '../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 import typography from '../theme/typography';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types/navigation';
 
 const ItemSeparator = () => <View style={{ height: 14 }} />;
 
@@ -25,9 +27,15 @@ export interface CartItem {
   description?: string;
 }
 
+// Type the navigation
+type CartScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Checkout'
+>;
+
 const Cart = () => {
   const { cart, updateQuantity, clearCart } = useContext(CartContext);
-  const navigation = useNavigation();
+  const navigation = useNavigation<CartScreenNavigationProp>();
 
   const increaseQty = (item: CartItem) => {
     console.log('item - increaseQty', item);
@@ -113,23 +121,45 @@ const Cart = () => {
         <View style={styles.billBox}>
           <View style={styles.billRow}>
             <Text style={styles.billLabel}>Subtotal</Text>
-            <Text style={styles.billValue}>${subTotal.toFixed(2)}</Text>
+            <Text style={styles.billValue}>
+              ${subTotal?.toFixed(2) || '0.00'}
+            </Text>
           </View>
           <View style={styles.billRow}>
             <Text style={styles.billLabel}>VAT Tax (10%)</Text>
-            <Text style={styles.billValue}>${vatTax.toFixed(2)}</Text>
+            <Text style={styles.billValue}>
+              ${vatTax?.toFixed(2) || '0.00'}
+            </Text>
           </View>
           <View style={styles.billRow}>
             <Text style={styles.billLabel}>Shipping</Text>
-            <Text style={styles.billValue}>${shipping.toFixed(2)}</Text>
+            <Text style={styles.billValue}>
+              ${shipping?.toFixed(2) || '0.00'}
+            </Text>
           </View>
 
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalAmount}>${total.toFixed(2)}</Text>
+            <Text style={styles.totalAmount}>
+              ${total?.toFixed(2) || '0.00'}
+            </Text>
           </View>
 
-          <TouchableOpacity style={styles.checkoutBtn}>
+          <TouchableOpacity
+            style={{
+              ...styles.checkoutBtn,
+              backgroundColor: cart.length === 0 ? colors.base : colors.primary,
+            }}
+            onPress={() =>
+              navigation.navigate('Checkout', {
+                total,
+                onPay: () => {
+                  clearCart();
+                },
+              })
+            }
+            disabled={cart.length === 0}
+          >
             <Text style={styles.checkoutText}>Proceed to Checkout</Text>
           </TouchableOpacity>
         </View>

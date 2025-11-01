@@ -17,8 +17,10 @@ const ProductCard = ({ item, onPress }: any) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
 
-  // overall card animation
   useEffect(() => {
+    fadeAnim.setValue(0);
+    scaleAnim.setValue(0.95);
+    setLoaded(false); // Reset loaded state for new image
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -31,7 +33,7 @@ const ProductCard = ({ item, onPress }: any) => {
         useNativeDriver: true,
       }),
     ]).start();
-  }, [fadeAnim, scaleAnim]);
+  }, [item.id, fadeAnim, scaleAnim]); // Trigger animation on item.id change
 
   return (
     <Animated.View
