@@ -153,9 +153,6 @@ const Cart = () => {
             onPress={() =>
               navigation.navigate('Checkout', {
                 total,
-                onPay: () => {
-                  clearCart();
-                },
               })
             }
             disabled={cart.length === 0}
