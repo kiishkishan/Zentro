@@ -14,7 +14,7 @@ import ProductsSkeleton from '../components/ProductsSkeletonLoader';
 
 const Home = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
-  const { items, loading, error, page } = useAppSelector(
+  const { items, loading, error, page, hasMore } = useAppSelector(
     state => state.products,
   );
 
@@ -23,7 +23,8 @@ const Home = ({ navigation }: any) => {
   }, [dispatch, page]);
 
   const loadMore = () => {
-    if (!loading) dispatch(fetchProducts({ offset: page, limit: 20 }));
+    if (!loading && hasMore)
+      dispatch(fetchProducts({ offset: page, limit: 20 }));
   };
 
   return (
@@ -36,7 +37,7 @@ const Home = ({ navigation }: any) => {
         <ProductsSkeleton />
       ) : (
         <FlatList
-          data={items}
+          data={items.slice(0, 16)}
           numColumns={2}
           renderItem={({ item }) => (
             <ProductCard
@@ -86,5 +87,5 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   loadingIndicator: { margin: 16 },
-  contentContainer: { paddingBottom: 16 },
+  contentContainer: { paddingBottom: 50 },
 });
