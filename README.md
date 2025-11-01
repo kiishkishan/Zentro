@@ -43,7 +43,7 @@ npm run ios
 
 ---
 
-# 🧠 Architecture Overview
+## 🧠 Architecture Overview
 
 This project follows a clean, scalable React Native architecture with a strong separation of concerns and type‑safety.
 
@@ -63,19 +63,19 @@ src
 
 ---
 
-# 🔗 Data Flow (API → Store → UI)
+## 🔗 Data Flow (API → Store → UI)
 
 ```
 axiosClient.ts → products.ts (API functions) → thunk → slice → UI
 ```
 
-## axiosClient.ts
+### axiosClient.ts
 
 * Base axios instance (interceptors)
 * Handles headers & future auth tokens
 * Centralized config
 
-## products.ts (API Layer)
+### products.ts (API Layer)
 
 Defines reusable API functions:
 
@@ -84,20 +84,20 @@ export const fetchProductsApi = (offset, limit) =>
   axiosClient.get(`/products?offset=${offset}&limit=${limit}`);
 ```
 
-## Thunk
+### Thunk
 
 * Calls API
 * Handles async success/error
 * Stores data in Redux
 
-## UI
+### UI
 
 * Selects data from Redux
 * Displays products
 
 ---
 
-## 🧽 Why Filter Product Data?
+### 🧽 Why Filter Product Data?
 
 To avoid rendering broken products from Platzi fakeapi store
 
@@ -109,7 +109,7 @@ Ensures clean UI & avoids crashes.
 
 ---
 
-## 🧭 Type‑Safe Navigation
+### 🧭 Type‑Safe Navigation
 
 Implemented `@react-navigation` with TypeScript route types:
 
@@ -128,7 +128,7 @@ export type RootStackParamList = {
 
 ---
 
-## ♾️ Infinite Scroll Implementation
+### ♾️ Infinite Scroll Implementation
 
 * Used `FlatList`
 * `onEndReached` triggers new fetch
