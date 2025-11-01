@@ -15,25 +15,10 @@ import typography from '../theme/typography';
 
 import { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
+import { RootStackParamList } from '../types/navigation';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 const { width } = Dimensions.get('window');
-
-interface Product {
-  id: number;
-  images: string[];
-  title: string;
-  description: string;
-  price: number;
-}
-
-interface ProductDetailProps {
-  route: {
-    params: {
-      product: Product;
-    };
-  };
-}
-
 interface ScrollEvent {
   nativeEvent: {
     contentOffset: {
@@ -42,7 +27,9 @@ interface ScrollEvent {
   };
 }
 
-const ProductDetail = ({ route }: ProductDetailProps) => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Details'>;
+
+const ProductDetail = ({ route }: Props) => {
   const { product } = route.params;
   const [quantity, setQuantity] = useState(1);
   const [activeIndex, setActiveIndex] = useState(0);
