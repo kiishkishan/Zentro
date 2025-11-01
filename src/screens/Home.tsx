@@ -73,7 +73,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   heading: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '700',
     color: colors.primary,
     marginHorizontal: 16,

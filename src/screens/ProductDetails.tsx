@@ -55,7 +55,7 @@ const ProductDetail = ({ route }: ProductDetailProps) => {
       id: product.id,
       title: product.title,
       price: product.price,
-      itemQuantity: quantity,
+      quantity: quantity,
       image: product.images?.[0] || '',
     });
 

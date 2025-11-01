@@ -4,43 +4,64 @@ interface CartItem {
   id: number;
   title: string;
   price: number;
-  itemQuantity: number;
+  quantity: number;
   image: string;
 }
 
 interface CartContextProps {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
+  updateQuantity: (id: number, type: 'inc' | 'dec') => void;
+  clearCart: () => void;
 }
 
 export const CartContext = createContext<CartContextProps>({
   cart: [],
   addToCart: () => {},
+  updateQuantity: () => {},
+  clearCart: () => {},
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   const addToCart = (item: CartItem) => {
-    console.log('Adding item to cart: CART_CONTEXT', item);
     setCart(prev => {
-      const existingItem = prev.find(cartItem => cartItem.id === item.id);
-      if (existingItem) {
-        return prev.map(cartItem =>
-          cartItem.id === item.id
-            ? {
-                ...cartItem,
-                itemQuantity: cartItem.itemQuantity + item.itemQuantity,
-              }
-            : cartItem,
+      const exists = prev.find(p => p.id === item.id);
+
+      if (exists) {
+        return prev.map(p =>
+          p.id === item.id ? { ...p, quantity: item.quantity } : p,
         );
-      } else {
-        return [...prev, { ...item, quantity: 1 }];
       }
+
+      // add new product WITH the passed quantity
+      return [...prev, { ...item }];
     });
   };
+
+  const updateQuantity = (id: number, type: 'inc' | 'dec') => {
+    setCart(prev =>
+      prev.map(item =>
+        item.id === id
+          ? {
+              ...item,
+              quantity:
+                type === 'inc'
+                  ? item.quantity + 1
+                  : Math.max(1, item.quantity - 1),
+            }
+          : item,
+      ),
+    );
+  };
+
+  const clearCart = () => setCart([] as CartItem[]);
+
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider
+      value={{ cart, addToCart, updateQuantity, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );
