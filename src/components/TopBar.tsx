@@ -7,7 +7,7 @@ const TopBar = () => {
     <View style={styles.topBar}>
       <View style={styles.logoContainer}>
         <Image
-          source={require('../assets/logo.png')} // your logo
+          source={require('../assets/logo.png')} // logo
           style={styles.logo}
           resizeMode="contain"
         />

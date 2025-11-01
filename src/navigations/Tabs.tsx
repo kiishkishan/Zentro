@@ -1,11 +1,12 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { StyleSheet, Animated, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import Cart from '../screens/Cart';
 import Profile from '../screens/Profile';
 import colors from '../theme/colors';
+import TopBar from '../components/TopBar';
+import TabIcon from '../components/TabIcon';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,43 +16,16 @@ const icons = {
   profile: require('../assets/profile.png'),
 };
 
-const AnimatedTabIcon = React.memo(({ focused, source }: any) => {
-  const scale = React.useRef(new Animated.Value(1)).current;
+const TopHeader = () => <TopBar />;
 
-  React.useEffect(() => {
-    Animated.spring(scale, {
-      toValue: focused ? 1.25 : 1,
-      friction: 4,
-      tension: 120,
-      useNativeDriver: true,
-    }).start();
-  }, [focused, scale]);
-
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <Animated.Image
-        source={source}
-        style={[
-          styles.icon,
-          { transform: [{ scale }], tintColor: focused ? '#fff' : '#ccc' },
-        ]}
-        resizeMode="contain"
-      />
-      {focused && <View style={styles.dot} />}
-    </View>
-  );
-});
-
-// ✅ moved outside — safe + lint-proof
 const renderTabIcon =
-  (source: any) =>
-  ({ focused }: { focused: boolean }) =>
-    <AnimatedTabIcon focused={focused} source={source} />;
+  (source: any, label: string) =>
+  ({ focused }: any) =>
+    <TabIcon focused={focused} source={source} label={label} />;
 
 const Tabs = () => (
   <Tab.Navigator
     screenOptions={{
-      headerShown: false,
       tabBarShowLabel: false,
       tabBarStyle: styles.tabBar,
     }}
@@ -59,19 +33,26 @@ const Tabs = () => (
     <Tab.Screen
       name="Home"
       component={Home}
-      options={{ tabBarIcon: renderTabIcon(icons.home) }}
+      options={{
+        tabBarIcon: renderTabIcon(icons.home, 'Home'),
+        header: () => TopHeader(),
+      }}
     />
-
     <Tab.Screen
       name="Cart"
       component={Cart}
-      options={{ tabBarIcon: renderTabIcon(icons.cart) }}
+      options={{
+        tabBarIcon: renderTabIcon(icons.cart, 'Cart'),
+        headerShown: false,
+      }}
     />
-
     <Tab.Screen
       name="Profile"
       component={Profile}
-      options={{ tabBarIcon: renderTabIcon(icons.profile) }}
+      options={{
+        tabBarIcon: renderTabIcon(icons.profile, 'Profile'),
+        header: () => TopHeader(),
+      }}
     />
   </Tab.Navigator>
 );
@@ -79,17 +60,6 @@ const Tabs = () => (
 export default Tabs;
 
 const styles = StyleSheet.create({
-  icon: {
-    width: 32,
-    height: 32,
-  },
-  dot: {
-    width: 6,
-    height: 6,
-    backgroundColor: '#fff',
-    borderRadius: 50,
-    marginTop: 4,
-  },
   tabBar: {
     height: 65,
     backgroundColor: colors.primary,

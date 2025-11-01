@@ -15,6 +15,7 @@ interface ProductsState {
   loading: boolean;
   error: string | null;
   page: number;
+  hasMore?: boolean;
 }
 
 const initialState: ProductsState = {
@@ -22,6 +23,7 @@ const initialState: ProductsState = {
   loading: false,
   error: null,
   page: 0,
+  hasMore: true,
 };
 
 const productsSlice = createSlice({
@@ -32,6 +34,7 @@ const productsSlice = createSlice({
       state.items = [];
       state.page = 0;
       state.error = null;
+      state.hasMore = true;
     },
   },
   extraReducers: builder => {
@@ -44,9 +47,21 @@ const productsSlice = createSlice({
         fetchProducts.fulfilled,
         (state, action: PayloadAction<Product[]>) => {
           state.loading = false;
-          // Immer lets us mutate state directly
-          state.items.push(...action.payload);
-          state.page += action.payload.length; // update page based on items fetched
+
+          const existingIds = new Set(state.items.map(p => p.id));
+          const newProducts = action.payload.filter(
+            p => !existingIds.has(p.id),
+          );
+
+          if (newProducts.length > 0) {
+            state.items.push(...newProducts);
+            state.page += newProducts.length; // update page based on items fetched && only count newly added products
+          }
+
+          // If API returned no new products, mark hasMore false
+          if (newProducts.length === 0) {
+            state.hasMore = false;
+          }
         },
       )
       .addCase(fetchProducts.rejected, (state, action: PayloadAction<any>) => {
