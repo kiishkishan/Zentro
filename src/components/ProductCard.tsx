@@ -1,56 +1,71 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   Text,
   TouchableOpacity,
   StyleSheet,
   View,
+  Image,
   Animated,
 } from 'react-native';
 import colors from '../theme/colors';
 
 const ProductCard = ({ item, onPress }: any) => {
   const [loaded, setLoaded] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  const handlePress = useCallback(() => onPress(item), [item, onPress]);
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.95)).current;
+
+  // overall card animation
   useEffect(() => {
-    if (loaded) {
+    Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 500,
+        duration: 300,
         useNativeDriver: true,
-      }).start();
-    }
-  }, [loaded, fadeAnim]);
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, scaleAnim]);
 
   return (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => onPress(item)}
-      activeOpacity={0.8}
+    <Animated.View
+      style={[
+        styles.card,
+        { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
+      ]}
     >
-      <View style={styles.imageWrapper}>
-        {!loaded && <View style={[styles.image, styles.skeletonBackground]} />}
+      <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
+        <View style={styles.imageWrapper}>
+          {!loaded && (
+            <View style={[styles.image, styles.skeletonBackground]} />
+          )}
+          <Image
+            source={{ uri: item.images?.[0] }}
+            style={styles.image}
+            resizeMode="contain"
+            onLoadEnd={() => setLoaded(true)}
+          />
+        </View>
 
-        <Animated.Image
-          source={{ uri: item.images?.[0] }}
-          style={[styles.image, { opacity: fadeAnim }]}
-          resizeMode="contain"
-          onLoadEnd={() => setLoaded(true)}
-        />
-      </View>
+        <Text numberOfLines={1} style={styles.title}>
+          {item.title}
+        </Text>
 
-      <Text numberOfLines={1} style={styles.title}>
-        {item.title}
-      </Text>
+        <Text numberOfLines={2} style={styles.description}>
+          {item.description}
+        </Text>
 
-      <Text numberOfLines={2} style={styles.description}>
-        {item.description}
-      </Text>
-
-      <View style={styles.footer}>
-        <Text style={styles.price}>${item.price}</Text>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.footer}>
+          <Text style={styles.price}>${item.price}</Text>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
@@ -85,7 +100,11 @@ const styles = StyleSheet.create({
     width: '120%',
     height: '120%',
     alignSelf: 'center',
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    shadowColor: colors.black,
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 6,
+    elevation: 4,
   },
 
   skeletonBackground: {

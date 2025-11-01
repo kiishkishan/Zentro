@@ -6,21 +6,69 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import colors from '../theme/colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import typography from '../theme/typography';
+
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 
 const { width } = Dimensions.get('window');
 
-const ProductDetail = ({ route }: any) => {
+interface Product {
+  id: number;
+  images: string[];
+  title: string;
+  description: string;
+  price: number;
+}
+
+interface ProductDetailProps {
+  route: {
+    params: {
+      product: Product;
+    };
+  };
+}
+
+interface ScrollEvent {
+  nativeEvent: {
+    contentOffset: {
+      x: number;
+    };
+  };
+}
+
+const ProductDetail = ({ route }: ProductDetailProps) => {
   const { product } = route.params;
   const [quantity, setQuantity] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const navigation = useNavigation();
+  const { addToCart } = useContext(CartContext);
 
-  const addToCart = () => {
-    console.log('Add to cart:', product, 'Quantity:', quantity);
+  const addToCartHandler = () => {
+    addToCart({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      itemQuantity: quantity,
+      image: product.images?.[0] || '',
+    });
+
+    console.log('Added to cart:', product.title);
+  };
+
+  const renderImage = ({ item }: { item: string }) => (
+    <Image source={{ uri: item }} style={styles.image} resizeMode="cover" />
+  );
+
+  const onScroll = (event: ScrollEvent) => {
+    const index = Math.round(event.nativeEvent.contentOffset.x / (width - 30));
+    setActiveIndex(index);
   };
 
   return (
@@ -31,14 +79,30 @@ const ProductDetail = ({ route }: any) => {
       >
         <Text style={styles.backText}>← Back</Text>
       </TouchableOpacity>
+
       <View style={styles.card}>
-        {/* Hero Image */}
-        <View style={styles.imageWrapper}>
-          <Image
-            source={{ uri: product.images?.[0] }}
-            style={styles.image}
-            resizeMode="contain"
-          />
+        {/* Image Carousel */}
+        <FlatList
+          data={product.images}
+          keyExtractor={(_, index) => index.toString()}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          renderItem={renderImage}
+          onScroll={onScroll}
+        />
+
+        {/* Carousel indicators */}
+        <View style={styles.indicatorWrapper}>
+          {product.images.map((_: any, i: number) => (
+            <View
+              key={i}
+              style={[
+                styles.indicator,
+                { opacity: Number(i === activeIndex ? 1.0 : 0.3) },
+              ]}
+            />
+          ))}
         </View>
 
         {/* Product Info */}
@@ -67,7 +131,7 @@ const ProductDetail = ({ route }: any) => {
           </View>
 
           {/* Add to Cart */}
-          <TouchableOpacity style={styles.addButton} onPress={addToCart}>
+          <TouchableOpacity style={styles.addButton} onPress={addToCartHandler}>
             <Text style={styles.addButtonText}>Add to Cart</Text>
           </TouchableOpacity>
         </View>
@@ -90,50 +154,66 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 16,
     left: 16,
-    zIndex: 10,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 12,
     paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: colors.surface,
     borderRadius: 8,
+    elevation: 5,
+    shadowColor: colors.white,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    zIndex: 5,
   },
   backText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1c1c1e',
+    fontSize: 16,
+    fontWeight: typography.semiBold,
+    color: colors.textTitle,
+    backgroundColor: colors.surface,
   },
   card: {
     width: width - 30,
     height: '95%',
     elevation: 1,
-  },
-  imageWrapper: {
-    width: '100%',
-    height: 250, // Hero section - big but not full screen
-    justifyContent: 'center',
-    alignItems: 'center',
+    zIndex: 1,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: width - 30,
+    height: 265,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  indicatorWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  indicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.primary,
+    marginHorizontal: 4,
   },
   info: {
     padding: 16,
   },
   title: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#1c1c1e',
+    fontWeight: typography.bold,
+    color: colors.textTitle,
     marginBottom: 4,
   },
   description: {
     fontSize: 13,
-    color: '#6c6c70',
+    color: colors.textSemiMuted,
     marginBottom: 8,
     lineHeight: 18,
   },
   price: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 22,
+    fontWeight: typography.extraBold,
     color: colors.primary,
     marginBottom: 16,
   },

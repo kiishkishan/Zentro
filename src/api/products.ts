@@ -2,7 +2,7 @@ import axiosClient from './axiosClient';
 
 export const fetchProductsApi = async (offset: number, limit: number) => {
   const response = await axiosClient.get(
-    `/products?offset=${offset}&limit=${limit}`,
+    `/products/?offset=${offset}&limit=${limit}`,
   );
   return response.data;
 };

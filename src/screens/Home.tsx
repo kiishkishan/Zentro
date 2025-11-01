@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchProducts } from '../store/productsThunk';
 import ProductCard from '../components/ProductCard';
 import colors from '../theme/colors';
-import TopBar from '../components/TopBar';
 import ProductsSkeleton from '../components/ProductsSkeletonLoader';
 
 const Home = ({ navigation }: any) => {
@@ -29,8 +28,6 @@ const Home = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <TopBar />
-
       <Text style={styles.heading}>Products</Text>
 
       {error && <Text style={styles.errorText}>{error}</Text>}
@@ -57,6 +54,14 @@ const Home = ({ navigation }: any) => {
             ) : null
           }
           contentContainerStyle={styles.contentContainer}
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={8}
+          initialNumToRender={8}
+          getItemLayout={(_, index) => ({
+            length: 250,
+            offset: 250 * index,
+            index,
+          })}
         />
       )}
     </View>
