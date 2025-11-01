@@ -77,9 +77,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.simpleecommerce"
+    namespace "com.zentro"
     defaultConfig {
-        applicationId "com.simpleecommerce"
+        applicationId "com.zentro"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

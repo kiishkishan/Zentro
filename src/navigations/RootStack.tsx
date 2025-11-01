@@ -7,10 +7,12 @@ import Success from '../screens/Success';
 
 const Stack = createNativeStackNavigator();
 
+const DetailsScreen = (props: any) => <ProductDetails {...props} />;
+
 const RootStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Tabs" component={Tabs} />
-    <Stack.Screen name="Details" component={ProductDetails} />
+    <Stack.Screen name="Details" component={DetailsScreen} />
     <Stack.Screen name="Checkout" component={Checkout} />
     <Stack.Screen name="Success" component={Success} />
   </Stack.Navigator>
