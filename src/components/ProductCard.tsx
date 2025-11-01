@@ -48,7 +48,7 @@ const ProductCard = ({ item, onPress }: any) => {
             <View style={[styles.image, styles.skeletonBackground]} />
           )}
           <Image
-            source={{ uri: item.images?.[0] }}
+            source={{ uri: item?.images?.[0] || '' }}
             style={styles.image}
             resizeMode="contain"
             onLoadEnd={() => setLoaded(true)}

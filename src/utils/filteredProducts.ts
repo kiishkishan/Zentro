@@ -1,4 +1,12 @@
-// utils/filterValidProducts.ts
+// const bannedTitles = ['test', 'crown'];
+
+// const isBannedTitle = (title: string | null | undefined): boolean => {
+//   if (!title) return true;
+
+//   const cleaned = title.trim().toLowerCase();
+//   return bannedTitles.some(banned => cleaned.includes(banned));
+// };
+
 export const isValidImage = (url: string | null | undefined): boolean => {
   if (!url) return false;
 
@@ -19,8 +27,9 @@ export const filterValidProducts = (products: any[] = []) => {
   return products.filter(item => {
     const images = Array.isArray(item.images) ? item.images : [item.image];
     const hasValidImages = images.some(isValidImage);
-    const hasValidTitle = item.title && isValidTitle(item.title);
+    // const hasValidTitle =
+    //   item.title && isValidTitle(item.title) && !isBannedTitle(item.title);
 
-    return hasValidImages && hasValidTitle;
+    return hasValidImages;
   });
 };

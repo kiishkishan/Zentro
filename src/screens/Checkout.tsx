@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+// screens/Checkout.tsx
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '../theme/colors';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,6 +9,7 @@ import {
   NativeStackNavigationProp,
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
+import { CartContext } from '../context/CartContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Checkout'>;
 type CheckoutNavigationProp = NativeStackNavigationProp<
@@ -15,9 +17,11 @@ type CheckoutNavigationProp = NativeStackNavigationProp<
   'Checkout'
 >;
 
-const Checkout: React.FC<Props> = ({ route }: Props) => {
+const Checkout: React.FC<Props> = ({ route }) => {
+  const { total } = route.params;
   const navigation = useNavigation<CheckoutNavigationProp>();
-  const { total, onPay } = route.params;
+
+  const { payNow } = useContext(CartContext);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -29,13 +33,11 @@ const Checkout: React.FC<Props> = ({ route }: Props) => {
           <Text style={styles.heading}>Checkout</Text>
         </View>
 
-        {/* Total Value */}
         <View style={styles.card}>
           <Text style={styles.label}>Total</Text>
           <Text style={styles.value}>${total?.toFixed(2) || '0.00'}</Text>
         </View>
 
-        {/* Payment Method */}
         <View style={styles.card}>
           <Text style={styles.label}>Payment Method</Text>
           <View style={styles.paymentMethod}>
@@ -43,12 +45,10 @@ const Checkout: React.FC<Props> = ({ route }: Props) => {
           </View>
         </View>
 
-        {/* Pay Now Button */}
         <TouchableOpacity
           style={styles.payButton}
           onPress={() => {
-            if (onPay) onPay();
-            else Alert.alert('Payment', 'Pay Now clicked!');
+            payNow();
             navigation.navigate('Success');
           }}
         >
@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
   headerArea: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     marginBottom: 24,
   },
   heading: {
