@@ -1,6 +1,6 @@
 # Zentro App Documentation
 
-### 🛠️ Project Setup Guide
+## 🛠️ Project Setup Guide
 
 ## Clone the Repository
 
