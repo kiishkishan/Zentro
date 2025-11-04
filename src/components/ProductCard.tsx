@@ -8,6 +8,8 @@ import {
   Animated,
 } from 'react-native';
 import colors from '../theme/colors';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { addToWishList, removeFromWishList } from '../store/wishlistSlice';
 
 const ProductCard = ({ item, onPress }: any) => {
   const [loaded, setLoaded] = useState(false);
@@ -16,6 +18,24 @@ const ProductCard = ({ item, onPress }: any) => {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
+
+  const dispatch = useAppDispatch();
+  const wishlistItems = useAppSelector(state => state.wishlist.items);
+  const isWishListed = wishlistItems.some(p => p.id === item.id);
+
+  const lastPress = useRef(0);
+
+  const handleWishListPress = () => {
+    const now = Date.now();
+    const delay = 200;
+
+    if (now - lastPress.current < delay) {
+      dispatch(removeFromWishList(item));
+    } else {
+      dispatch(addToWishList(item));
+    }
+    lastPress.current = now;
+  };
 
   useEffect(() => {
     fadeAnim.setValue(0);
@@ -65,6 +85,11 @@ const ProductCard = ({ item, onPress }: any) => {
 
         <View style={styles.footer}>
           <Text style={styles.price}>${item.price}</Text>
+
+          {/* Heart Btn */}
+          <TouchableOpacity onPress={handleWishListPress}>
+            <Text>{isWishListed ? '💖' : '🤍'}</Text>
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -135,6 +160,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.6,
     borderTopColor: colors.border,
     paddingTop: 8,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
 
   price: {
