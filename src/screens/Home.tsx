@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Text,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchProducts } from '../store/productsThunk';
@@ -29,7 +30,12 @@ const Home = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Products</Text>
+      <View style={styles.headingContainer}>
+        <Text style={styles.heading}>Products</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Wishlist')}>
+          <Text style={styles.wishlistText}>💖 Wishlist</Text>
+        </TouchableOpacity>
+      </View>
 
       {error && <Text style={styles.errorText}>{error}</Text>}
 
@@ -73,6 +79,12 @@ export default Home;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
+  headingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 16,
+  },
   heading: {
     fontSize: 24,
     fontWeight: '700',
@@ -88,4 +100,9 @@ const styles = StyleSheet.create({
   },
   loadingIndicator: { margin: 16 },
   contentContainer: { paddingBottom: 50 },
+  wishlistText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.primary,
+  },
 });
